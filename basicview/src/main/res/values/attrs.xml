@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleProgress">
+        <!--默认颜色-->
+        <attr name="defaultColor" format="color" />
+        <!--渐变颜色1-->
+        <attr name="gradientColor1" format="color" />
+        <!--渐变颜色2-->
+        <attr name="gradientColor2" format="color" />
+        <!--渐变颜色3-->
+        <attr name="gradientColor3" format="color" />
+        <!--角度-->
+        <attr name="angle" format="integer" />
+        <!--最大值-->
+        <attr name="maxSize" format="float" />
+        <!--左边文字-->
+        <attr name="leftMsg" format="string" />
+        <!--右边文字-->
+        <attr name="rightMsg" format="string" />
+        <!--是否显示刻度-->
+        <attr name="isScale" format="boolean" />
+        <!--刻度一-->
+        <attr name="scaleSize1" format="integer" />
+        <!--刻度二-->
+        <attr name="scaleSize2" format="integer" />
+        <!--刻度三-->
+        <attr name="scaleSize3" format="integer" />
+        <!--刻度四-->
+        <attr name="scaleSize4" format="integer" />
+    </declare-styleable>
+</resources>
