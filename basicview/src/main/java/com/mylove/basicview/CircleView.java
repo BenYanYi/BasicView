@@ -41,6 +41,9 @@ public class CircleView extends RadioGroup {
         circleProgress.setNumber(size, textView);
     }
 
+    /**
+     * xml设置配置信息
+     */
     private void setAttrs(TypedArray ta) {
         //xml配置circleProgress
         float maxSize = ta.getFloat(R.styleable.CircleView_cvMaxSize, 100);
