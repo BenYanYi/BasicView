@@ -1,5 +1,6 @@
 package com.mylove.basicview;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -7,14 +8,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
-import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import java.text.DecimalFormat;
 
 /**
  * @author yanyi
@@ -23,26 +23,28 @@ import android.widget.TextView;
  * @overview 圆环进度条
  */
 public class CircleProgress extends View {
-    private Paint mLine_Paint, mOval_Paint_Grey, mOva_Paint_Blue, mLine_Paint_White, mTextPaint;
-
-    private int defaultColor = Color.parseColor("#eeeeee");//默认色彩
-    private int[] colors = new int[]{Color.parseColor("#4de4f6"),
-            Color.parseColor("#337fdd"), Color.parseColor("#3347dd")};
-    private int dip_1, dip_18;
-    private LinearGradient mLinearGradient;//渐变色
-    private int mCircle_angle = 240;//内环总度数 180 +60
-    private float MAX_POWER = 100;//最大值
-    private int textMsg;
-    private int nowPower = 0;//当前数值
-    private int needEndPower;//终点数值
-    private Path[] mPath;//文字的path
-    private TextView tv_value;
-    private Context mContext;
-    private int margin_circle_1, margin_circle_2, margin_circle_3;//圆环环距离外部的边距
-    private String leftMsg = "";
-    private String rightMsg = "";
-
-    private boolean isScale = false;
+    private Context mContext;//上下文
+    private Paint mPaint;//画笔
+    private Paint bPaint;//背景画笔
+    private int[] colors = new int[]{Color.parseColor("#00ff00"), Color.parseColor("#ffff00"), Color.parseColor("#ff0000")};
+    private float maxSize = 100;//最大值
+    private float minSize = 0;//最小值
+    private float size = minSize;//当前值
+    private float number = minSize;//当前值
+    private float startAngle = 150;//开始位置
+    private float angle = 240;//圆环的范围
+    private float proportion;//一份所占的角度
+    private TextView tv;//中间显示的文字
+    private float msgSize = minSize;//显示时的值
+    private int dip;
+    private boolean isShader = true;//是否让进度条渐变，默认渐变
+    private int defaultColor = Color.RED;//圆环画笔默认颜色
+    private float defaultWidth = 16;//圆环画笔线宽
+    private int bgColor = Color.GRAY;//背景圆环颜色
+    private float bgWidth = 16;//背景圆环线宽
+    private String leftMsg = "";//左边文字
+    private String rightMsg = "";//右边文字
+    private boolean isDecimal = true;//显示小数位
 
     public CircleProgress(Context context) {
         this(context, null);
@@ -52,179 +54,340 @@ public class CircleProgress extends View {
         this(context, attrs, 0);
     }
 
-    public void setPower(int power, TextView tv_value) {
-        setPower("", "", power, tv_value);
-    }
-
-    public void setMAX_POWER(float max_power) {
-        this.MAX_POWER = max_power;
-    }
-
-    public void setNowPower(int nowPower) {
-        this.nowPower = nowPower;
-    }
-
-    public void setPower(String leftMsg, String rightMsg, int power, TextView tv_value) {
-        this.tv_value = tv_value;
-        this.leftMsg = leftMsg;
-        this.rightMsg = rightMsg;
-        if (power == needEndPower)
-            return;
-        needEndPower = power;
-        invalidate();
-    }
-
     public CircleProgress(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         TypedArray ta = mContext.obtainStyledAttributes(attrs, R.styleable.CircleProgress);
-        //设置默认颜色
-        defaultColor = ta.getColor(R.styleable.CircleProgress_defaultColor, Color.parseColor("#eeeeee"));
-        //设置渐变颜色
-        colors[0] = ta.getColor(R.styleable.CircleProgress_gradientColor1, Color.parseColor("#4de4f6"));
-        colors[1] = ta.getColor(R.styleable.CircleProgress_gradientColor2, Color.parseColor("#337fdd"));
-        colors[2] = ta.getColor(R.styleable.CircleProgress_gradientColor3, Color.parseColor("#3347dd"));
-        //设置角度
-        mCircle_angle = ta.getInteger(R.styleable.CircleProgress_angle, 240);
-        //设置最大值
-        MAX_POWER = ta.getFloat(R.styleable.CircleProgress_maxSize, 100);
-        //设置是否显示刻度，默认不显示
-        isScale = ta.getBoolean(R.styleable.CircleProgress_isScale, false);
-        //设置刻度盘值
-        strs[1] = ta.getInteger(R.styleable.CircleProgress_scaleSize1, 20) + "";
-        strs[3] = ta.getInteger(R.styleable.CircleProgress_scaleSize2, 40) + "";
-        strs[5] = ta.getInteger(R.styleable.CircleProgress_scaleSize3, 60) + "";
-        strs[7] = ta.getInteger(R.styleable.CircleProgress_scaleSize4, 80) + "";
-        dip_1 = DisplayUtils.dip2px(context, 1);//线宽度
-        dip_18 = DisplayUtils.dip2px(context, 18);//圆环宽度
-        mLine_Paint = new Paint();
-        mLine_Paint.setColor(defaultColor);
-        mLine_Paint.setStyle(Paint.Style.STROKE);
-        mLine_Paint.setAntiAlias(true);
-        mLine_Paint.setStrokeWidth(dip_1);
-        mLine_Paint_White = new Paint();
-        mLine_Paint_White.setColor(Color.WHITE);
-        mLine_Paint_White.setStyle(Paint.Style.STROKE);
-        mLine_Paint_White.setStrokeWidth(dip_18);
-        //背景环
-        mOval_Paint_Grey = new Paint();
-        mOval_Paint_Grey.setColor(defaultColor);
-        mOval_Paint_Grey.setStyle(Paint.Style.STROKE);
-        mOval_Paint_Grey.setStrokeWidth(dip_18);
-        mOval_Paint_Grey.setStrokeCap(Paint.Cap.ROUND);
-        mOval_Paint_Grey.setAntiAlias(true);
-        //渐变环
-        mOva_Paint_Blue = new Paint();
-        mOva_Paint_Blue.setColor(colors[0]);
-        mOva_Paint_Blue.setStyle(Paint.Style.STROKE);
-        mOva_Paint_Blue.setAntiAlias(true);
-        mOva_Paint_Blue.setStrokeCap(Paint.Cap.ROUND);
-        mOva_Paint_Blue.setStrokeWidth(dip_18);
-        //字体
-        mTextPaint = new TextPaint();
-        mTextPaint.setTextSize(DisplayUtils.sp2px(context, 12));
-        mTextPaint.setColor(Color.parseColor("#a7a7a7"));
-        mTextPaint.setAntiAlias(true);
-
-        margin_circle_1 = DisplayUtils.dip2px(context, 20);
-        margin_circle_2 = DisplayUtils.dip2px(context, 35);
-        margin_circle_3 = DisplayUtils.dip2px(context, 50);
-
+        maxSize = ta.getFloat(R.styleable.CircleProgress_cpMaxSize, 100);
+        minSize = ta.getFloat(R.styleable.CircleProgress_cpMinSize, 0);
+        startAngle = ta.getFloat(R.styleable.CircleProgress_cpStartAngle, 150);
+        angle = ta.getFloat(R.styleable.CircleProgress_cpAngle, 240);
+        isShader = ta.getBoolean(R.styleable.CircleProgress_cpIsShader, true);
+        defaultColor = ta.getColor(R.styleable.CircleProgress_cpDefaultColor, Color.RED);
+        defaultWidth = ta.getFloat(R.styleable.CircleProgress_cpDefaultWidth, 16);
+        bgColor = ta.getColor(R.styleable.CircleProgress_cpBgColor, Color.GRAY);
+        bgWidth = ta.getFloat(R.styleable.CircleProgress_cpBgWidth, 16);
+        leftMsg = ta.getString(R.styleable.CircleProgress_cpLeftMsg);
+        rightMsg = ta.getString(R.styleable.CircleProgress_cpRightMsg);
+        isDecimal = ta.getBoolean(R.styleable.CircleProgress_cpIsDecimal, true);
+        size = minSize;
+        number = minSize;
+        msgSize = minSize;
+        setPaint();
     }
 
-    private RectF rect_1, rect_2, rect_3;
+    /**
+     * 设置画笔
+     */
+    private void setPaint() {
+        //设置进度条画笔
+        mPaint = new Paint();
+        //设置画笔颜色
+        mPaint.setColor(defaultColor);
+        //设置画笔无锯齿
+        mPaint.setAntiAlias(true);
+        //线宽
+        mPaint.setStrokeWidth(defaultWidth);
+        //只绘制轮廓
+        mPaint.setStyle(Paint.Style.STROKE);
+        //设置圆角
+        mPaint.setStrokeCap(Paint.Cap.ROUND);
+        //设置背景画笔
+        bPaint = new Paint();
+        //设置画笔颜色
+        bPaint.setColor(bgColor);
+        //设置画笔无锯齿
+        bPaint.setAntiAlias(true);
+        //线宽
+        bPaint.setStrokeWidth(bgWidth);
+        //只绘制轮廓
+        bPaint.setStyle(Paint.Style.STROKE);
+        //设置圆角
+        bPaint.setStrokeCap(Paint.Cap.ROUND);
 
+        dip = DisplayUtils.dip2px(mContext, 20);
+    }
+
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (rect_1 == null)
-            rect_1 = new RectF(dip_1 / 2, dip_1 / 2, getWidth() - dip_1 / 2, getHeight() - dip_1 / 2);
-        if (rect_2 == null) {
-            rect_2 = new RectF(margin_circle_1, margin_circle_1, getWidth() - margin_circle_1, getHeight() - margin_circle_1);
-            mLinearGradient = new LinearGradient(margin_circle_1, margin_circle_1, getWidth() - margin_circle_1, margin_circle_1, colors, null, LinearGradient.TileMode.CLAMP);
-            mOva_Paint_Blue.setShader(mLinearGradient);
+        //计算值为1时所占角度的大小
+        proportion = angle / (maxSize - minSize);
+        //计算当前值对应的角度
+        float mSweepAngle = (number - minSize) * proportion;
+        //绘制渐变
+//        Shader sweepGradient = new SweepGradient(getWidth() / 2, getHeight() / 2, colors, null);
+//        mPaint.setShader(sweepGradient);
+        if (isShader) {
+            LinearGradient mGradient = new LinearGradient(dip, dip, getWidth() - dip, dip, colors, null, LinearGradient.TileMode.CLAMP);
+            mPaint.setShader(mGradient);
         }
-        if (rect_3 == null)
-            rect_3 = new RectF(margin_circle_2, margin_circle_2, getWidth() - margin_circle_2, getHeight() - margin_circle_2);
-        //绘制圆环相关
-        canvas.drawArc(rect_1, 160, 70, false, mLine_Paint);
-        canvas.drawArc(rect_1, 310, 70, false, mLine_Paint);
-        canvas.drawArc(rect_2, 150, mCircle_angle, false, mOval_Paint_Grey);
-        canvas.drawArc(rect_2, 150, mCircle_angle * (nowPower / MAX_POWER), false, mOva_Paint_Blue);
-        canvas.drawArc(rect_3, 160, 230, false, mLine_Paint);
-        if (isScale) {
-            //绘制白线
-            drawWhiteLine(canvas);
-            //绘制文字
-            drawText(canvas);
+        //圆弧所在范围的外矩形
+        RectF rectF = new RectF(dip, dip, getWidth() - dip, getHeight() - dip);
+        //背景圆弧所在的椭圆对象，开始角度，圆弧角度，是否与圆心连线，画笔
+        canvas.drawArc(rectF, startAngle, angle, false, bPaint);
+        //圆弧所在的椭圆对象，开始角度，圆弧角度，是否显示连线（圆弧两边与圆心的连线）,画笔
+        canvas.drawArc(rectF, startAngle, mSweepAngle, false, mPaint);
+        canvas.rotate(150, getWidth() / 2, getHeight() / 2);
+
+        //设置显示的时候保留两位小数
+        DecimalFormat mFormat = new DecimalFormat("##0");
+        if (isDecimal) {
+            mFormat = new DecimalFormat("##0.00");
         }
-        if (tv_value != null) {
-            tv_value.setText(leftMsg + textMsg + rightMsg);
+        //设置文字
+        String msg = leftMsg + mFormat.format(msgSize) + rightMsg;
+        if (tv != null) {
+            tv.setText(msg);
         }
-        if (nowPower < needEndPower && nowPower < MAX_POWER) {
-            Log.v("nowPower", nowPower + "");
-            nowPower++;
-            invalidate();
-        } else if (nowPower > needEndPower || nowPower > MAX_POWER) {
-            nowPower--;
-            invalidate();
-        } else if (nowPower == needEndPower || nowPower == MAX_POWER) {
-//            nowPower = (int) MAX_POWER;
-            invalidate();
-        }
-        if (textMsg < needEndPower) {
-            Log.v("textMsg", textMsg + "");
-            textMsg++;
-            invalidate();
-        } else if (textMsg > needEndPower) {
-            textMsg--;
-            invalidate();
-        } else if (textMsg == needEndPower) {
-//            textMsg = (int) MAX_POWER;
-            invalidate();
-        }
+        setData();
     }
 
-    private String strs[] = new String[]{"·", "20", "·", "40", "·", "60", "·", "80", "·"};
-    private RectF rect_4;
-
-    private void drawText(Canvas canvas) {
-        if (rect_4 == null) {
-            rect_4 = new RectF(margin_circle_3, margin_circle_3, getWidth() - margin_circle_3, getWidth() - margin_circle_3);
-        }
-        if (mPath == null) {
-            mPath = new Path[9];
-            for (int i = 0; i < 9; i++) {
-                mPath[i] = new Path();
-                if (i % 2 == 1) {
-                    mPath[i].addArc(rect_4, 150 + mCircle_angle / 10 * (i + 1) - 4, mCircle_angle / 10);
-                } else if (i == 0) {
-                    mPath[i].addArc(rect_4, 150 + mCircle_angle / 10 * (i + 1) - 2, mCircle_angle / 10);
-                } else if (i == 8) {
-                    mPath[i].addArc(rect_4, 150 + mCircle_angle / 10 * (i + 1) + 2, mCircle_angle / 10);
-                } else {
-                    mPath[i].addArc(rect_4, 150 + mCircle_angle / 10 * (i + 1), mCircle_angle / 10);
-                }
+    /**
+     * 数据处理
+     */
+    private void setData() {
+        //判断当前数值是否超过设置的最大值，简单点就是判断当前值最后的角度是否会超过最大角度
+        if (size >= maxSize) {
+            if (msgSize >= maxSize && msgSize < size) {
+                number = maxSize;
+                msgSize = msgSize + proportion;
+                invalidate();
+            } else if (msgSize == size) {
+                number = maxSize;
+                msgSize = size;
+                invalidate();
+            } else if (msgSize > (size + proportion)) {
+                msgSize = msgSize - proportion;
+                number = maxSize;
+                invalidate();
+            } else if (msgSize > size && msgSize < (size + proportion)) {//当进度计算过头归为填入数值
+                msgSize = size;
+                number = maxSize;
+                invalidate();
+            } else {
+                msgSize = msgSize + proportion;
+                number = msgSize;
+                invalidate();
             }
+        } else if (size >= minSize) {
+            //判断当前增加的角度是否超过数值对应的角度
+            if (msgSize < size) {
+                msgSize = msgSize + proportion;
+                number = msgSize;
+                invalidate();
+            } else if (msgSize == size) {
+                msgSize = size;
+                number = msgSize;
+                invalidate();
+            } else if (msgSize > size && msgSize < (size + proportion)) {
+                msgSize = size;
+                number = msgSize;
+                invalidate();
+            } else {
+                msgSize = msgSize - proportion;
+                number = msgSize;
+                invalidate();
+            }
+        } else {
+            msgSize = size;
+            number = minSize;
+            invalidate();
         }
-
-        for (int i = 0; i < mPath.length; i++) {
-            canvas.drawTextOnPath(strs[i], mPath[i], 0, 0, mTextPaint);
-        }
-
-    }
-
-    private void drawWhiteLine(Canvas canvas) {
-        canvas.drawArc(rect_2, 150 + mCircle_angle / 5, 1, false, mLine_Paint_White);
-        canvas.drawArc(rect_2, 150 + mCircle_angle / 5 * 2, 1, false, mLine_Paint_White);
-        canvas.drawArc(rect_2, 150 + mCircle_angle / 5 * 3, 1, false, mLine_Paint_White);
-        canvas.drawArc(rect_2, 150 + mCircle_angle / 5 * 4, 1, false, mLine_Paint_White);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = DisplayUtils.getWindow_Width((Activity) mContext) / 5 * 3;
-        setMeasuredDimension(width, width);
+        //获取宽度的模式与大小
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        //获取高度的模式与大小
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        setMeasuredDimension(measureWidth(widthMode, width), measureHeight(heightMode, height));
+    }
+
+    /**
+     * 判断宽度
+     *
+     * @param mode  宽度模式
+     * @param width 宽度
+     */
+    private int measureWidth(int mode, int width) {
+        int mWidth = DisplayUtils.getWindow_Width((Activity) mContext) / 5 * 3;
+        switch (mode) {
+            case MeasureSpec.UNSPECIFIED:
+            case MeasureSpec.AT_MOST:
+                break;
+            case MeasureSpec.EXACTLY:
+                mWidth = width;
+                break;
+        }
+        return mWidth;
+    }
+
+    /**
+     * 判断高度
+     *
+     * @param mode   高度模式
+     * @param height 高度
+     */
+    private int measureHeight(int mode, int height) {
+        int mHeight = DisplayUtils.getWindow_Width((Activity) mContext) / 5 * 3;
+        switch (mode) {
+            case MeasureSpec.UNSPECIFIED:
+            case MeasureSpec.AT_MOST:
+                break;
+            case MeasureSpec.EXACTLY:
+                mHeight = height;
+                break;
+        }
+        return mHeight;
+    }
+
+    /**
+     * 设置最大值
+     *
+     * @param maxSize 最大值
+     */
+    public CircleProgress setMaxSize(float maxSize) {
+        this.maxSize = maxSize;
+        return this;
+    }
+
+    /**
+     * 设置最小值
+     *
+     * @param minSize 最小值
+     */
+    public CircleProgress setMinSize(float minSize) {
+        this.minSize = minSize;
+        this.number = minSize;
+        return this;
+    }
+
+    /**
+     * 设置渐变颜色
+     *
+     * @param colors 颜色数组
+     */
+    public CircleProgress setColors(int[] colors) {
+        this.colors = colors;
+        return this;
+    }
+
+    /**
+     * 起始点位置
+     *
+     * @param startAngle 多少度处（默认150°）
+     */
+    public CircleProgress setStartAngle(float startAngle) {
+        this.startAngle = startAngle;
+        return this;
+    }
+
+    /**
+     * 设置圆环显示大小，最大360°
+     *
+     * @param angle 度数（默认240）
+     */
+    public CircleProgress setAngle(float angle) {
+        this.angle = angle;
+        return this;
+    }
+
+    /**
+     * 设置是否需要颜色渐变
+     *
+     * @param isShader 默认为true，需要
+     */
+    public CircleProgress isShader(boolean isShader) {
+        this.isShader = isShader;
+        return this;
+    }
+
+    /**
+     * 设置圆环画笔颜色
+     *
+     * @param defaultColor 颜色,默认为红色
+     */
+    public CircleProgress setDefaultColor(int defaultColor) {
+        this.defaultColor = defaultColor;
+        return this;
+    }
+
+    /**
+     * 设置圆环画笔线宽
+     *
+     * @param defaultWidth 圆环画笔线宽，默认为16px
+     */
+    public CircleProgress setDefaultWidth(float defaultWidth) {
+        this.defaultWidth = defaultWidth;
+        return this;
+    }
+
+    /**
+     * 设置背景圆环画笔颜色
+     *
+     * @param bgColor 背景圆环颜色，默认灰色
+     */
+    public CircleProgress setBgColor(int bgColor) {
+        this.bgColor = bgColor;
+        return this;
+    }
+
+    /**
+     * 设置背景圆环线宽
+     *
+     * @param bgWidth 背景圆环线宽，默认16px
+     */
+    public CircleProgress setBgWidth(float bgWidth) {
+        this.bgWidth = bgWidth;
+        return this;
+    }
+
+    /**
+     * 设置左边文本
+     *
+     * @param leftMsg 文本
+     */
+    public CircleProgress setLeftMsg(String leftMsg) {
+        this.leftMsg = leftMsg;
+        return this;
+    }
+
+    /**
+     * 设置右边文本
+     *
+     * @param rightMsg 文本
+     */
+    public CircleProgress setRightMsg(String rightMsg) {
+        this.rightMsg = rightMsg;
+        return this;
+    }
+
+    /**
+     * 设置是否显示小数
+     *
+     * @param isDecimal 默认显示
+     */
+    public CircleProgress isDecimal(boolean isDecimal) {
+        this.isDecimal = isDecimal;
+        return this;
+    }
+
+    /**
+     * 设置数值
+     *
+     * @param number 数值
+     */
+    public void setNumber(float number, TextView textView) {
+        this.tv = textView;
+        if (number == size)
+            return;
+        size = number;
+        invalidate();
     }
 }

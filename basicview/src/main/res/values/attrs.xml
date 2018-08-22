@@ -1,31 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CircleProgress">
-        <!--默认颜色-->
-        <attr name="defaultColor" format="color" />
-        <!--渐变颜色1-->
-        <attr name="gradientColor1" format="color" />
-        <!--渐变颜色2-->
-        <attr name="gradientColor2" format="color" />
-        <!--渐变颜色3-->
-        <attr name="gradientColor3" format="color" />
-        <!--角度-->
-        <attr name="angle" format="integer" />
         <!--最大值-->
-        <attr name="maxSize" format="float" />
+        <attr name="cpMaxSize" format="float" />
+        <!--最小值-->
+        <attr name="cpMinSize" format="float" />
+        <!--起始位置（角度）-->
+        <attr name="cpStartAngle" format="float" />
+        <!--圆环大小-->
+        <attr name="cpAngle" format="float" />
+        <!--是否显示渐变进度条-->
+        <attr name="cpIsShader" format="boolean" />
+        <!--圆环画笔颜色-->
+        <attr name="cpDefaultColor" format="color" />
+        <!--圆环画笔线宽-->
+        <attr name="cpDefaultWidth" format="float" />
+        <!--背景画笔颜色-->
+        <attr name="cpBgColor" format="color" />
+        <!--背景画笔线宽-->
+        <attr name="cpBgWidth" format="float" />
         <!--左边文字-->
-        <attr name="leftMsg" format="string" />
+        <attr name="cpLeftMsg" format="string" />
         <!--右边文字-->
-        <attr name="rightMsg" format="string" />
-        <!--是否显示刻度-->
-        <attr name="isScale" format="boolean" />
-        <!--刻度一-->
-        <attr name="scaleSize1" format="integer" />
-        <!--刻度二-->
-        <attr name="scaleSize2" format="integer" />
-        <!--刻度三-->
-        <attr name="scaleSize3" format="integer" />
-        <!--刻度四-->
-        <attr name="scaleSize4" format="integer" />
+        <attr name="cpRightMsg" format="string" />
+        <!--是否显示小数-->
+        <attr name="cpIsDecimal" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="CircleView">
+        <!--最大值-->
+        <attr name="cvMaxSize" format="float" />
+        <!--最小值-->
+        <attr name="cvMinSize" format="float" />
+        <!--起始位置（角度）-->
+        <attr name="cvStartAngle" format="float" />
+        <!--圆环大小-->
+        <attr name="cvAngle" format="float" />
+        <!--是否显示渐变进度条-->
+        <attr name="cvIsShader" format="boolean" />
+        <!--圆环画笔颜色-->
+        <attr name="cvDefaultColor" format="color" />
+        <!--圆环画笔线宽-->
+        <attr name="cvDefaultWidth" format="float" />
+        <!--背景画笔颜色-->
+        <attr name="cvBgColor" format="color" />
+        <!--背景画笔线宽-->
+        <attr name="cvBgWidth" format="float" />
+        <!--左边文字-->
+        <attr name="cvLeftMsg" format="string" />
+        <!--右边文字-->
+        <attr name="cvRightMsg" format="string" />
+        <!--文本内容-->
+        <attr name="cvSize" format="float" />
+        <!--文本大小-->
+        <attr name="cvTextSize" format="dimension" />
+        <!--文本颜色-->
+        <attr name="cvTextColor" format="color" />
+        <!--文本样式-->
+        <attr name="cvTextStyle" format="enum">
+            <!--加粗-->
+            <enum name="bold" value="1" />
+            <!--斜体-->
+            <enum name="italic" value="2" />
+            <!--下划线-->
+            <enum name="underline" value="3" />
+            <!--删除线-->
+            <enum name="strike" value="4" />
+            <!--正常-->
+            <enum name="normal" value="5" />
+        </attr>
+        <!--是否显示小数-->
+        <attr name="cvIsDecimal" format="boolean" />
     </declare-styleable>
 </resources>

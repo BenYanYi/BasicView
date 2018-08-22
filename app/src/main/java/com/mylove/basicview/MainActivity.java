@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 /**
  * @author yanyi
@@ -14,20 +13,21 @@ import android.util.Log;
  * @overview
  */
 public class MainActivity extends AppCompatActivity {
-    private CircleProgress circleProgress;
+    private CircleView circleView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        circleProgress = findViewById(R.id.circle);
+        circleView = findViewById(R.id.circle);
+        circleView.setRightMsg("%").isDecimal(false);
         new Thread() {
             @Override
             public void run() {
                 try {
-                    while (true){
-                        handler.sendEmptyMessage(0x100);
-                        sleep(1000);
+                    while (true) {
+                        mHandler.sendEmptyMessage(0x100);
+                        sleep(10000);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -36,11 +36,12 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-    private Handler handler = new Handler() {
+    private Handler mHandler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
+            super.handleMessage(msg);
             int random = (int) (Math.random() * 100);
-            Log.v("", random + "");
-            circleProgress.setPower(random, null);
+            circleView.setSize(random);
         }
     };
 }
