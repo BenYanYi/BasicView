@@ -114,7 +114,7 @@ public class CircleView extends RadioGroup {
         //获取高度的模式与大小
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
-        setMeasuredDimension(measureWidth(widthMode, width), measureWidth(widthMode, width));
+        setMeasuredDimension(measureWidth(widthMode, width), measureHeight(heightMode, height));
     }
 
     /**
