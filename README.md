@@ -2,12 +2,13 @@
 自定义控件
 
 ### 使用方法
-        compile 'com.yanyi.benyanyi:basicview:1.0.2'
+      compile 'com.yanyi.benyanyi:basicview:1.0.2'
         
 ### 简介
 
 #### CircleProgress
 环形进度条，显示文本需要自己添加，可以为空，为空时不显示当前进度值<br/>
+![](https://github.com/BenYanYi/BasicView/blob/master/gif/circleView.gif)
 ##### 简单使用
 xml中添加
 
