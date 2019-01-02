@@ -2,7 +2,7 @@
 自定义控件
 
 ### 使用方法
-      compile 'com.yanyi.benyanyi:basicview:1.0.2'
+      compile 'com.yanyi.benyanyi:basicview:1.0.3'
         
 ### 简介
 
@@ -118,3 +118,11 @@ xml中添加
 * setTextStyle(TextStyle textStyle) 设置文字字体样式（默认为正常。BOLD：加粗，ITALIC：斜体，UNDERLINE：下划线，STRIKE：删除线，NORMAL：正常）
 * isDecimal(boolean isDecimal) 设置是否显示小数（默认显示）
 * setSize(float size) 设置数值，也就是中间的文字
+
+
+<br/>
+若在使用过程中出现什么问题，可以联系作者<br/>
+作者：演绎<br/>
+QQ：1541612424<br/>
+email： work@yanyi.red<br/>
+微信公众号：benyanyi(演绎未来)&nbsp;&nbsp;&nbsp;将会不定期的更新关于个人的一些开发经验
