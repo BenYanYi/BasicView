@@ -2,7 +2,7 @@
 自定义控件
 
 ### 使用方法
-      compile 'com.yanyi.benyanyi:basicview:1.0.3'
+      compile 'com.yanyi.benyanyi:basicview:1.0.4'
         
 ### 简介
 

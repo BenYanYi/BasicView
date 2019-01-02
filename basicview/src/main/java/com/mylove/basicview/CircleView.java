@@ -1,6 +1,5 @@
 package com.mylove.basicview;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -124,7 +123,7 @@ public class CircleView extends RadioGroup {
      * @param width 宽度
      */
     private int measureWidth(int mode, int width) {
-        int mWidth = DisplayUtils.getWindow_Width((Activity) mContext) / 5 * 3;
+        int mWidth = DisplayUtils.getWindow_Width(mContext) / 5 * 3;
         switch (mode) {
             case MeasureSpec.UNSPECIFIED:
             case MeasureSpec.AT_MOST:
@@ -143,7 +142,7 @@ public class CircleView extends RadioGroup {
      * @param height 高度
      */
     private int measureHeight(int mode, int height) {
-        int mHeight = DisplayUtils.getWindow_Width((Activity) mContext) / 5 * 3;
+        int mHeight = DisplayUtils.getWindow_Width(mContext) / 5 * 3;
         switch (mode) {
             case MeasureSpec.UNSPECIFIED:
             case MeasureSpec.AT_MOST:

@@ -3,7 +3,7 @@ package com.mylove.basicview;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
-import android.view.WindowManager;
+import android.util.DisplayMetrics;
 
 /**
  * @author yanyi
@@ -11,7 +11,7 @@ import android.view.WindowManager;
  * @email ben@yanyi.red
  * @overview
  */
-public class DisplayUtils {
+class DisplayUtils {
     /***
      *  px转dip
      * @param context
@@ -62,8 +62,14 @@ public class DisplayUtils {
         return frame.top;
     }
 
-    public static int getWindow_Width(Activity activity) {
-        WindowManager wm = activity.getWindowManager();
-        return wm.getDefaultDisplay().getWidth();
+    public static int getWindow_Width(Context context) {
+//        WindowManager wm = ((Activity) context).getWindowManager();
+//
+//        return wm.getDefaultDisplay().getWidth();
+//        DisplayMetrics dm = new DisplayMetrics();
+//        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+//        return  dm.widthPixels;
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        return dm.widthPixels;
     }
 }
