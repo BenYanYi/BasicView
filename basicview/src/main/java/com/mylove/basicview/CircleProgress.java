@@ -209,15 +209,15 @@ public class CircleProgress extends View {
         int height = MeasureSpec.getSize(heightMeasureSpec);
         int widthSize = measureWidth(widthMode, width);
         int heightSize = measureHeight(heightMode, height);
-        if (isEquilateral) {
-            if (widthSize >= heightSize) {
-                setMeasuredDimension(heightSize, heightSize);
-            } else {
-                setMeasuredDimension(widthSize, widthSize);
-            }
-        } else {
-            setMeasuredDimension(widthSize, heightSize);
-        }
+//        if (isEquilateral) {
+//            if (widthSize >= heightSize) {
+//                setMeasuredDimension(heightSize, heightSize);
+//            } else {
+//                setMeasuredDimension(widthSize, widthSize);
+//            }
+//        } else {
+        setMeasuredDimension(widthSize, heightSize);
+//        }
     }
 
     /**
