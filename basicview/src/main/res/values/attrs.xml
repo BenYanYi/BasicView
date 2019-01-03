@@ -25,6 +25,8 @@
         <attr name="cpRightMsg" format="string" />
         <!--是否显示小数-->
         <attr name="cpIsDecimal" format="boolean" />
+        <!--等边-->
+        <attr name="cpEquilateral" format="boolean" />
     </declare-styleable>
     <declare-styleable name="CircleView">
         <!--最大值-->
@@ -70,5 +72,7 @@
         </attr>
         <!--是否显示小数-->
         <attr name="cvIsDecimal" format="boolean" />
+        <!--等边-->
+        <attr name="cvEquilateral" format="boolean" />
     </declare-styleable>
 </resources>

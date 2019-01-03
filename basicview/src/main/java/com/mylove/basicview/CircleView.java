@@ -22,6 +22,8 @@ public class CircleView extends RadioGroup {
     private CircleProgress circleProgress;
     private TextView textView;
 
+    private boolean isEquilateral = false;//是否等边
+
     private float size;
 
     public CircleView(Context context) {
@@ -95,6 +97,8 @@ public class CircleView extends RadioGroup {
             paint.setUnderlineText(false);
             paint.setStrikeThruText(false);
         }
+        isEquilateral = ta.getBoolean(R.styleable.CircleView_cvEquilateral, false);
+        circleProgress.setEquilateral(isEquilateral);
     }
 
     /**
@@ -113,7 +117,17 @@ public class CircleView extends RadioGroup {
         //获取高度的模式与大小
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
-        setMeasuredDimension(measureWidth(widthMode, width), measureHeight(heightMode, height));
+        int widthSize = measureWidth(widthMode, width);
+        int heightSize = measureHeight(heightMode, height);
+        if (isEquilateral) {
+            if (widthSize >= heightSize) {
+                setMeasuredDimension(heightSize, heightSize);
+            } else {
+                setMeasuredDimension(widthSize, widthSize);
+            }
+        } else {
+            setMeasuredDimension(widthSize, heightSize);
+        }
     }
 
     /**

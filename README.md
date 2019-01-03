@@ -2,7 +2,7 @@
 自定义控件
 
 ### 使用方法
-      compile 'com.yanyi.benyanyi:basicview:1.0.4'
+      compile 'com.yanyi.benyanyi:basicview:1.0.5'
         
 ### 简介
 
@@ -48,6 +48,7 @@ xml中添加
 * cpLeftMsg 左边文字（默认为“”）
 * cpRightMsg 右边文字（默认为“”）
 * cpIsDecimal 是否显示小数（默认显示）
+* cpEquilateral 设置是否等边（默认false）
 
 ###### 逻辑代码配置
 * setMaxSize(float maxSize) 设置最大值（默认为100）
@@ -99,6 +100,7 @@ xml中添加
 * cvTextColor 设置字体颜色（默认为灰色）
 * cvTextStyle 设置文本样式（bold：加粗；italic：斜体；underline：下划线；strike：删除线；normal：正常；默认正常）
 * cvIsDecimal 设置是否显示小数（默认显示）
+* cvEquilateral 设置是否等边（默认false）
 
 ###### 逻辑代码配置
 * setMaxSize(float maxSize) 设置最大值（默认100）

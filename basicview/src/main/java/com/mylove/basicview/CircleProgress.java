@@ -44,6 +44,7 @@ public class CircleProgress extends View {
     private String leftMsg = "";//左边文字
     private String rightMsg = "";//右边文字
     private boolean isDecimal = true;//显示小数位
+    private boolean isEquilateral = false;//是否等边
 
     public CircleProgress(Context context) {
         this(context, null);
@@ -69,6 +70,7 @@ public class CircleProgress extends View {
         leftMsg = ta.getString(R.styleable.CircleProgress_cpLeftMsg);
         rightMsg = ta.getString(R.styleable.CircleProgress_cpRightMsg);
         isDecimal = ta.getBoolean(R.styleable.CircleProgress_cpIsDecimal, true);
+        isEquilateral = ta.getBoolean(R.styleable.CircleProgress_cpEquilateral, false);
         size = minSize;
         number = minSize;
         msgSize = minSize;
@@ -205,7 +207,17 @@ public class CircleProgress extends View {
         //获取高度的模式与大小
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
-        setMeasuredDimension(measureWidth(widthMode, width), measureHeight(heightMode, height));
+        int widthSize = measureWidth(widthMode, width);
+        int heightSize = measureHeight(heightMode, height);
+        if (isEquilateral) {
+            if (widthSize >= heightSize) {
+                setMeasuredDimension(heightSize, heightSize);
+            } else {
+                setMeasuredDimension(widthSize, widthSize);
+            }
+        } else {
+            setMeasuredDimension(widthSize, heightSize);
+        }
     }
 
     /**
@@ -388,5 +400,19 @@ public class CircleProgress extends View {
             return;
         size = number;
         invalidate();
+    }
+
+    /**
+     * 返回是否等边
+     */
+    public boolean isEquilateral() {
+        return isEquilateral;
+    }
+
+    /**
+     * 设置是否等边
+     */
+    public void setEquilateral(boolean equilateral) {
+        isEquilateral = equilateral;
     }
 }
