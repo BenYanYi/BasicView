@@ -6,6 +6,8 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.mylove.basicview.progress.CircleView;
+
 /**
  * @author yanyi
  * @date 2018/8/17 15:34

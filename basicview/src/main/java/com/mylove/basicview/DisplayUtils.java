@@ -11,7 +11,7 @@ import android.util.DisplayMetrics;
  * @email ben@yanyi.red
  * @overview
  */
-class DisplayUtils {
+public class DisplayUtils {
     /***
      *  px转dip
      * @param context

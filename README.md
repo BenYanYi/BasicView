@@ -2,9 +2,39 @@
 自定义控件
 
 ### 使用方法
-      compile 'com.yanyi.benyanyi:basicview:1.0.4'
+      compile 'com.yanyi.benyanyi:basicview:1.0.5'
         
 ### 简介
+
+#### SmoothCheckBox
+自定义圆形CheckBox
+##### 简单使用
+xml中添加
+
+     <com.mylove.basicview.checkbox.SmoothCheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+##### 配置
+###### xml配置
+* BenDuration 动画持续时间
+* BenStrikeWidth 边框宽度
+* BenBorderColor 边框颜色
+* BenTrimColor 选中状态颜色
+* BenTickColor 对勾颜色
+* BenTickWidth 对勾宽度
+
+###### 逻辑代码配置
+* isChecked() 判断checkbox是否选中状态
+* setChecked(boolean isChecked) 设置checkbox的状态(是否选中)
+* setChecked(boolean isChecked, boolean isAnimation) 设置checkbox的状态(是否选中,切换时是否有动画)
+* onClick() 点击事件
+* setOnCheckedChangeListener() 状态修改事件
+
+#### TouchImageView
+图片手势旋转与缩放
+##### 简单使用
+和ImageView使用方法一样
 
 #### CircleProgress
 环形进度条，显示文本需要自己添加，可以为空，为空时不显示当前进度值<br/>
@@ -117,10 +147,8 @@ xml中添加
 * setTextColor(int textColor) 设置文字颜色（默认为灰色）
 * setTextStyle(TextStyle textStyle) 设置文字字体样式（默认为正常。BOLD：加粗，ITALIC：斜体，UNDERLINE：下划线，STRIKE：删除线，NORMAL：正常）
 * isDecimal(boolean isDecimal) 设置是否显示小数（默认显示）
-* setSize(float size) 设置数值，也就是中间的文字
+* setSize(float size) 设置数值，也就是中间的文字<br/>
 
-
-<br/>
 若在使用过程中出现什么问题，可以联系作者<br/>
 作者：演绎<br/>
 QQ：1541612424<br/>

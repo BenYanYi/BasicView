@@ -1,4 +1,4 @@
-package com.mylove.basicview;
+package com.mylove.basicview.progress;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.mylove.basicview.DisplayUtils;
+import com.mylove.basicview.R;
 
 /**
  * @author yanyi

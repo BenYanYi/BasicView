@@ -1,4 +1,4 @@
-package com.mylove.basicview;
+package com.mylove.basicview.progress;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,6 +12,9 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
+
+import com.mylove.basicview.DisplayUtils;
+import com.mylove.basicview.R;
 
 import java.text.DecimalFormat;
 

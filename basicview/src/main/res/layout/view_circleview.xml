@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.mylove.basicview.CircleProgress
+    <com.mylove.basicview.progress.CircleProgress
         android:id="@+id/viewCircleProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,4 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
+
+    <com.mylove.basicview.checkbox.SmoothCheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>
